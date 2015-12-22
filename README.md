@@ -1,5 +1,5 @@
 # connect-nodejs-samples
-Samples of using Connect Open API in JavaScript and Node.js
+Samples of using [Connect Open API](https://connect.spotware.com/documentation/section/api-reference) in JavaScript and Node.js
 
 ## How to get started your own app in JavaScript and Node.js:
 
@@ -12,7 +12,4 @@ Samples of using Connect Open API in JavaScript and Node.js
     node app.js
 ```
 * The application will connect to sandbox Open API server, authenticate and subscribe for EURUSD spot prices
-
-[Spotware Connect API Reference](https://connect.spotware.com/documentation/section/api-reference)
-
 
