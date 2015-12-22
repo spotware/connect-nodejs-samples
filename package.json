@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "dependencies": {
+    "protobufjs": "^4.0.0",
+    "byte": "^1.1.4",
+    "chalk": "^1.1.1"
+  }
+}
