@@ -1,4 +1,3 @@
-var net = require('net');
 var protobuf = require('protobufjs');
 var bytebuffer = require('byte');
 var tls = require('tls');
