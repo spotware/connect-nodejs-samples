@@ -10,15 +10,25 @@ var CLIENT_SECRET = '49p1ynqfy7c4sw84gwoogwwsk8cocg8ow8gc8o80c0ws448cs4';
 var ACCOUNT_ID = 62002;
 var ACCOUNT_TOKEN = 'test002_access_token';
 
+// Proto Message Builds
 var commonBuilder = protobuf.loadProtoFile('proto/CommonMessages.proto');
 var openApiBuilder = protobuf.loadProtoFile('proto/OpenApiMessages.proto');
+
+
+// Buffers
+var PingBuf = commonBuilder.build('ProtoPingReq');
+var OAuthBuf = openApiBuilder.build('ProtoOAAuthReq');
+var SpotsBuf = openApiBuilder.build('ProtoOASubscribeForSpotsReq');
+var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
+
+
+
 var pingInterval;
 var start = Math.floor(new Date() / 1000);
 
 var socket = tls.connect(API_PORT, API_HOST, function() {
     console.log('Connected');
     // Sending pings in a loop
-    var PingBuf = commonBuilder.build('ProtoPingReq');
     pingInterval = setInterval(function() {
         var pingBuf = new PingBuf({
             payloadType: 'PING_REQ',
@@ -30,7 +40,6 @@ var socket = tls.connect(API_PORT, API_HOST, function() {
         socket.write(msg);
     }, 1000);
     // Authenticating
-    var OAuthBuf = openApiBuilder.build('ProtoOAAuthReq');
     var oAuthBuf = new OAuthBuf({
         payloadType: 'OA_AUTH_REQ',
         clientId: CLIENT_ID,
@@ -43,15 +52,15 @@ var socket = tls.connect(API_PORT, API_HOST, function() {
 });
 
 socket.on('readable', function() {
-        var length = new Buffer(socket.read(4)).readInt32BE(0);
-        var data = socket.read(length);
-    var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
+    var length = new Buffer(socket.read(4)).readInt32BE(0);
+    var data = socket.read(length);
+
     data = ProtoMessageBuf.decode(data);
     var payloadType = data.payloadType;
     if (payloadType == openApiBuilder.build('ProtoOAPayloadType').OA_AUTH_RES) {
         console.log('Received auth response');
         // Subscribing for EURUSD spots
-        var SpotsBuf = openApiBuilder.build('ProtoOASubscribeForSpotsReq');
+        
         var spotsBuf = new SpotsBuf({
             payloadType: 'OA_SUBSCRIBE_FOR_SPOTS_REQ',
             accountId: ACCOUNT_ID,
