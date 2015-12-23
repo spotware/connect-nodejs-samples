@@ -57,7 +57,7 @@ socket.on('readable', function() {
 
     data = ProtoMessageBuf.decode(data);
     var payloadType = data.payloadType;
-    if (payloadType == openApiBuilder.build('ProtoOAPayloadType').OA_AUTH_RES) {
+    if (payloadType === openApiBuilder.build('ProtoOAPayloadType').OA_AUTH_RES) {
         console.log('Received auth response');
         // Subscribing for EURUSD spots
         
@@ -71,15 +71,15 @@ socket.on('readable', function() {
         var msg = wrapMessage(spotsBuf);
         socket.write(getLength(msg));
         socket.write(msg);
-    } else if (payloadType == commonBuilder.build('ProtoPayloadType').PING_RES) {
+    } else if (payloadType === commonBuilder.build('ProtoPayloadType').PING_RES) {
         //console.log('Received ping response');
-    } else if (payloadType == openApiBuilder.build('ProtoOAPayloadType').OA_SUBSCRIBE_FOR_SPOTS_RES) {
+    } else if (payloadType === openApiBuilder.build('ProtoOAPayloadType').OA_SUBSCRIBE_FOR_SPOTS_RES) {
         console.log(chalk.blue('Received subscribe response'));
-    } else if (payloadType == openApiBuilder.build('ProtoOAPayloadType').OA_SPOT_EVENT) {
+    } else if (payloadType === openApiBuilder.build('ProtoOAPayloadType').OA_SPOT_EVENT) {
         var SpotBuf = openApiBuilder.build('ProtoOASpotEvent');
         var msg = SpotBuf.decode(data.payload);
         console.log(chalk.blue('Bid price: ' + msg.bidPrice + ', ask price: ' + msg.askPrice));
-    } else if (payloadType == commonBuilder.build('ProtoPayloadType').ERROR_RES) {
+    } else if (payloadType === commonBuilder.build('ProtoPayloadType').ERROR_RES) {
         var ErrorBuf = commonBuilder.build('ProtoErrorRes');
         var msg = ErrorBuf.decode(data.payload);
         console.log(chalk.red('Received error response'));
