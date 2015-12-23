@@ -2,7 +2,6 @@ var protobuf = require('protobufjs');
 var bytebuffer = require('byte');
 var tls = require('tls');
 var chalk = require('chalk');
-//var fs = require('fs');
 
 var API_HOST = 'sandbox-tradeapi.spotware.com';
 var API_PORT = 5032;
