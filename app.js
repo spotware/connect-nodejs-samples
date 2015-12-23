@@ -182,7 +182,6 @@ socket.on('error', function(e) {
 });
 
 function wrapMessage(data) {
-    var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
     var protoMessageBuf = new ProtoMessageBuf({
         payloadType: data.payloadType,
         payload: data.toBuffer(),
