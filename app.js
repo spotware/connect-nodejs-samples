@@ -10,15 +10,17 @@ var CLIENT_SECRET = '49p1ynqfy7c4sw84gwoogwwsk8cocg8ow8gc8o80c0ws448cs4';
 var ACCOUNT_ID = 62002;
 var ACCOUNT_TOKEN = 'test002_access_token';
 
+
+
 // Proto Message Builds
 var commonBuilder = protobuf.loadProtoFile('proto/CommonMessages.proto');
 var openApiBuilder = protobuf.loadProtoFile('proto/OpenApiMessages.proto');
-
 
 // Buffers
 var PingBuf = commonBuilder.build('ProtoPingReq');
 var OAuthBuf = openApiBuilder.build('ProtoOAAuthReq');
 var SpotsBuf = openApiBuilder.build('ProtoOASubscribeForSpotsReq');
+var SpotBuf = openApiBuilder.build('ProtoOASpotEvent');
 var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
 var ErrorBuf = commonBuilder.build('ProtoErrorRes');
 
