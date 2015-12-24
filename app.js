@@ -79,10 +79,10 @@ socket.on('readable', function() {
             console.log( 'PING_RES' );
             break;
         case 2000:
-            console.log( 'AUTH REQ');
+            console.log( 'AUTH_REQ');
             break;
         case 2001:
-            console.log( 'AUTH RES');
+            console.log( 'AUTH_RES');
 
             // Subscribing for EURUSD spots
 
