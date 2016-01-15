@@ -1,7 +1,17 @@
+var logTraffic;
+var logData;
+
+process.argv.forEach(function(arg){
+    logTraffic = logTraffic || (arg == 'logTraffic');
+    logData = logData || (arg == 'logData');
+});
+
+
 var protobuf = require('protobufjs');
 var bytebuffer = require('byte');
 var tls = require('tls');
 var chalk = require('chalk');
+var payloadmap = require('./payloadmap.js');
 
 var API_HOST = 'sandbox-tradeapi.spotware.com';
 var API_PORT = 5032;
@@ -18,11 +28,12 @@ var openApiBuilder = protobuf.loadProtoFile('proto/OpenApiMessages.proto');
 
 // Buffers
 var PingBuf = commonBuilder.build('ProtoPingReq');
+var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
+var ErrorBuf = commonBuilder.build('ProtoErrorRes');
+
 var OAuthBuf = openApiBuilder.build('ProtoOAAuthReq');
 var SpotsBuf = openApiBuilder.build('ProtoOASubscribeForSpotsReq');
 var SpotBuf = openApiBuilder.build('ProtoOASpotEvent');
-var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
-var ErrorBuf = commonBuilder.build('ProtoErrorRes');
 
 
 var pingInterval;
@@ -59,33 +70,19 @@ socket.on('readable', function() {
 
     data = ProtoMessageBuf.decode(data);
     var payloadType = data.payloadType;
+    var requestName = payloadmap.getPayloadName(payloadType);
+    logTraffic && console.log( requestName );
+    logData && console.log('payload:',data);
 
+    //Payload Types on payloadmap.js
     switch( payloadType ) {
         case 50:
-            console.log( 'ERROR_RES' );
-
             var msg = ErrorBuf.decode(data.payload);
             console.log(chalk.red('Received error response'));
             console.log(chalk.red(msg.description));
 
-            break;
-        case 51:
-            console.log( 'HEARTBEAT_EVENT' );
-            break;
-        case 52:
-            console.log( 'PING_REQ' );
-            break;
-        case 53:
-            console.log( 'PING_RES' );
-            break;
-        case 2000:
-            console.log( 'AUTH_REQ');
-            break;
+            break;        
         case 2001:
-            console.log( 'AUTH_RES');
-
-            // Subscribing for EURUSD spots
-
             var spotsBuf = new SpotsBuf({
                 payloadType: 'OA_SUBSCRIBE_FOR_SPOTS_REQ',
                 accountId: ACCOUNT_ID,
@@ -98,69 +95,7 @@ socket.on('readable', function() {
             socket.write(msg);
 
             break;
-        case 2002:
-            console.log( 'OA_SUBSCRIBE_FOR_TRADING_EVENTS_REQ' );
-            break;
-        case 2003:
-            console.log( 'OA_SUBSCRIBE_FOR_TRADING_EVENTS_RES' );
-            break;
-        case 2004:
-            console.log( 'OA_UNSUBSCRIBE_FROM_TRADING_EVENTS_REQ' );
-            break;
-        case 2005:
-            console.log( 'OA_UNSUBSCRIBE_FROM_TRADING_EVENTS_RES' );
-            break;
-        case 2006:
-            console.log( 'OA_GET_SUBSCRIBED_ACCOUNTS_REQ' );
-            break;
-        case 2007:
-            console.log( 'OA_GET_SUBSCRIBED_ACCOUNTS_RES' )
-            break;
-        case 2013:
-            console.log( 'OA_CREATE_ORDER_REQ' );
-            break;
-        case 2016:
-            console.log( 'OA_EXECUTION_EVENT' );
-            break;
-        case 2017:
-            console.log( 'OA_CANCEL_ORDER_REQ' );
-            break;
-        case 2018:
-            console.log( 'OA_CLOSE_POSITION_REQ' );
-            break;
-        case 2019:
-            console.log( 'OA_AMEND_POSITION_SL_TP_REQ' );
-            break;
-        case 2020:
-            console.log( 'OA_AMEND_ORDER_REQ' );
-            break;
-        case 2021:
-            console.log( 'OA_SUBSCRIBE_FOR_SPOTS_REQ' );
-            break;
-        case 2022:
-            console.log( 'OA_SUBSCRIBE_FOR_SPOTS_RES' );
-            break;
-        case 2023:
-            console.log( 'OA_UNSUBSCRIBE_FROM_SPOTS_REQ' );
-            break;
-        case 2024:
-            console.log( 'OA_UNSUBSCRIBE_FROM_SPOTS_RES' );
-            break;
-        case 2025:
-            console.log( 'OA_GET_SPOT_SUBSCRIPTION_REQ' );
-            break;
-        case 2026:
-            console.log( 'OA_GET_SPOT_SUBSCRIPTION_RES' );
-            break;
-        case 2027:
-            console.log( 'OA_GET_ALL_SPOT_SUBSCRIPTIONS_REQ' );
-            break;
-        case 2028:
-            console.log( 'OA_GET_ALL_SPOT_SUBSCRIPTIONS_RES' );
-            break;
-        case 2029:
-            console.log( 'OA_SPOT_EVENT' );
-
+        case 2029:        
             var msg = SpotBuf.decode(data.payload);
             console.log(chalk.blue('Bid price: ' + msg.bidPrice + ', ask price: ' + msg.askPrice));
 
