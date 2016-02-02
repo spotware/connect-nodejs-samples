@@ -2,6 +2,7 @@ var protobuf = require('protobufjs');
 var bytebuffer = require('byte');
 var tls = require('tls');
 var chalk = require('chalk');
+var protostream = require('protobuf-stream');
 
 var API_HOST = 'sandbox-tradeapi.spotware.com';
 var API_PORT = 5032;
@@ -53,11 +54,9 @@ var socket = tls.connect(API_PORT, API_HOST, function() {
     socket.write(msg);
 });
 
-socket.on('readable', function() {
-    var length = new Buffer(socket.read(4)).readInt32BE(0);
-    var data = socket.read(length);
+var transport = new protostream.Stream(ProtoMessageBuf, socket, 4);
 
-    data = ProtoMessageBuf.decode(data);
+transport.on('message', function(data) {
     var payloadType = data.payloadType;
 
     switch( payloadType ) {
@@ -94,9 +93,7 @@ socket.on('readable', function() {
             });
             console.log('Sending subscribe event...');
             var msg = wrapMessage(spotsBuf);
-            socket.write(getLength(msg));
-            socket.write(msg);
-
+            transport.send(msg);
             break;
         case 2002:
             console.log( 'OA_SUBSCRIBE_FOR_TRADING_EVENTS_REQ' );
