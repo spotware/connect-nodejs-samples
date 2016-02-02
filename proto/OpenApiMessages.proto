@@ -5,6 +5,7 @@ option java_outer_classname = "ContainerOpenApiMessages";
 
 import "OpenApiModelMessages.proto";
 import "CommonModelMessages.proto";
+import "OpenApiModelMessages.proto";
 
 //+------------------------------------------------------------------+
 //|                  Open Trading API Messages                       |

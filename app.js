@@ -25,6 +25,10 @@ var SpotBuf = openApiBuilder.build('ProtoOASpotEvent');
 var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
 var ErrorBuf = commonBuilder.build('ProtoErrorRes');
 
+// Payload Types
+var CommonProtoPayloadType = commonBuilder.build('ProtoPayloadType')
+var OpenApiProtoPayloadType = openApiBuilder.build('ProtoOAPayloadType')
+
 
 var pingInterval;
 var start = Math.floor(new Date() / 1000);
@@ -58,33 +62,30 @@ var transport = new protostream.Stream(ProtoMessageBuf, socket, 4);
 
 transport.on('message', function(data) {
     var payloadType = data.payloadType;
-
     switch( payloadType ) {
-        case 50:
+        // Common payload types
+        case CommonProtoPayloadType.ERROR_RES:
             console.log( 'ERROR_RES' );
-
             var msg = ErrorBuf.decode(data.payload);
             console.log(chalk.red('Received error response'));
             console.log(chalk.red(msg.description));
-
             break;
-        case 51:
+        case CommonProtoPayloadType.HEARTBEAT_EVENT:
             console.log( 'HEARTBEAT_EVENT' );
             break;
-        case 52:
+        case CommonProtoPayloadType.PING_REQ:
             console.log( 'PING_REQ' );
             break;
-        case 53:
+        case CommonProtoPayloadType.PING_RES:
             console.log( 'PING_RES' );
             break;
-        case 2000:
-            console.log( 'AUTH_REQ');
+        // Open API payload types
+        case OpenApiProtoPayloadType.OA_AUTH_REQ:
+            console.log( 'OA_AUTH_REQ');
             break;
-        case 2001:
-            console.log( 'AUTH_RES');
-
+        case OpenApiProtoPayloadType.OA_AUTH_RES:
+            console.log( 'OA_AUTH_RES');
             // Subscribing for EURUSD spots
-
             var spotsBuf = new SpotsBuf({
                 payloadType: 'OA_SUBSCRIBE_FOR_SPOTS_REQ',
                 accountId: ACCOUNT_ID,
@@ -95,78 +96,75 @@ transport.on('message', function(data) {
             var msg = wrapMessage(spotsBuf);
             transport.send(msg);
             break;
-        case 2002:
+        case OpenApiProtoPayloadType.OA_SUBSCRIBE_FOR_TRADING_EVENTS_REQ:
             console.log( 'OA_SUBSCRIBE_FOR_TRADING_EVENTS_REQ' );
             break;
-        case 2003:
+        case OpenApiProtoPayloadType.OA_SUBSCRIBE_FOR_TRADING_EVENTS_RES:
             console.log( 'OA_SUBSCRIBE_FOR_TRADING_EVENTS_RES' );
             break;
-        case 2004:
+        case OpenApiProtoPayloadType.OA_UNSUBSCRIBE_FROM_TRADING_EVENTS_REQ:
             console.log( 'OA_UNSUBSCRIBE_FROM_TRADING_EVENTS_REQ' );
             break;
-        case 2005:
+        case OpenApiProtoPayloadType.OA_UNSUBSCRIBE_FROM_TRADING_EVENTS_RES:
             console.log( 'OA_UNSUBSCRIBE_FROM_TRADING_EVENTS_RES' );
             break;
-        case 2006:
+        case OpenApiProtoPayloadType.OA_GET_SUBSCRIBED_ACCOUNTS_REQ:
             console.log( 'OA_GET_SUBSCRIBED_ACCOUNTS_REQ' );
             break;
-        case 2007:
+        case OpenApiProtoPayloadType.OA_GET_SUBSCRIBED_ACCOUNTS_RES:
             console.log( 'OA_GET_SUBSCRIBED_ACCOUNTS_RES' )
             break;
-        case 2013:
+        case OpenApiProtoPayloadType.OA_CREATE_ORDER_REQ:
             console.log( 'OA_CREATE_ORDER_REQ' );
             break;
-        case 2016:
+        case OpenApiProtoPayloadType.OA_EXECUTION_EVENT:
             console.log( 'OA_EXECUTION_EVENT' );
             break;
-        case 2017:
+        case OpenApiProtoPayloadType.OA_CANCEL_ORDER_REQ:
             console.log( 'OA_CANCEL_ORDER_REQ' );
             break;
-        case 2018:
+        case OpenApiProtoPayloadType.OA_CLOSE_POSITION_REQ:
             console.log( 'OA_CLOSE_POSITION_REQ' );
             break;
-        case 2019:
+        case OpenApiProtoPayloadType.OA_AMEND_POSITION_SL_TP_REQ:
             console.log( 'OA_AMEND_POSITION_SL_TP_REQ' );
             break;
-        case 2020:
+        case OpenApiProtoPayloadType.OA_AMEND_ORDER_REQ:
             console.log( 'OA_AMEND_ORDER_REQ' );
             break;
-        case 2021:
+        case OpenApiProtoPayloadType.OA_SUBSCRIBE_FOR_SPOTS_REQ:
             console.log( 'OA_SUBSCRIBE_FOR_SPOTS_REQ' );
             break;
-        case 2022:
+        case OpenApiProtoPayloadType.OA_SUBSCRIBE_FOR_SPOTS_RES:
             console.log( 'OA_SUBSCRIBE_FOR_SPOTS_RES' );
             break;
-        case 2023:
+        case OpenApiProtoPayloadType.OA_UNSUBSCRIBE_FROM_SPOTS_REQ:
             console.log( 'OA_UNSUBSCRIBE_FROM_SPOTS_REQ' );
             break;
-        case 2024:
+        case OpenApiProtoPayloadType.OA_UNSUBSCRIBE_FROM_SPOTS_RES:
             console.log( 'OA_UNSUBSCRIBE_FROM_SPOTS_RES' );
             break;
-        case 2025:
+        case OpenApiProtoPayloadType.OA_GET_SPOT_SUBSCRIPTION_REQ:
             console.log( 'OA_GET_SPOT_SUBSCRIPTION_REQ' );
             break;
-        case 2026:
+        case OpenApiProtoPayloadType.OA_GET_SPOT_SUBSCRIPTION_RES:
             console.log( 'OA_GET_SPOT_SUBSCRIPTION_RES' );
             break;
-        case 2027:
+        case OpenApiProtoPayloadType.OA_GET_ALL_SPOT_SUBSCRIPTIONS_REQ:
             console.log( 'OA_GET_ALL_SPOT_SUBSCRIPTIONS_REQ' );
             break;
-        case 2028:
+        case OpenApiProtoPayloadType.OA_GET_ALL_SPOT_SUBSCRIPTIONS_RES:
             console.log( 'OA_GET_ALL_SPOT_SUBSCRIPTIONS_RES' );
             break;
-        case 2029:
+        case OpenApiProtoPayloadType.OA_SPOT_EVENT:
             console.log( 'OA_SPOT_EVENT' );
-
             var msg = SpotBuf.decode(data.payload);
             console.log(chalk.blue('Bid price: ' + msg.bidPrice + ', ask price: ' + msg.askPrice));
-
             break;
         default:
-            console.log('Received misc payloadType: ' + payloadType);
+            console.log('Received unknown payloadType: ' + payloadType);
             break;
     }
-
 });
 
 socket.on('end', function() {
