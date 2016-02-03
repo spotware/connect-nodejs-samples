@@ -2,8 +2,7 @@ var logTraffic;
 var logData;
 
 process.argv.forEach(function(arg){
-    logTraffic = logTraffic || (arg == 'logTraffic');
-    logData = logData || (arg == 'logData');
+    logAllTraffic = logTraffic || (arg == 'logAllTraffic');
 });
 
 
@@ -11,7 +10,6 @@ var protobuf = require('protobufjs');
 var bytebuffer = require('byte');
 var tls = require('tls');
 var chalk = require('chalk');
-var payloadmap = require('./payloadmap.js');
 
 var API_HOST = 'sandbox-tradeapi.spotware.com';
 var API_PORT = 5032;
@@ -26,11 +24,14 @@ var ACCOUNT_TOKEN = 'test002_access_token';
 var commonBuilder = protobuf.loadProtoFile('proto/CommonMessages.proto');
 var openApiBuilder = protobuf.loadProtoFile('proto/OpenApiMessages.proto');
 
-// Buffers
+// Common Buffers
 var PingBuf = commonBuilder.build('ProtoPingReq');
+var ProtoPayloadType = commonBuilder.build('ProtoPayloadType');
 var ProtoMessageBuf = commonBuilder.build('ProtoMessage');
 var ErrorBuf = commonBuilder.build('ProtoErrorRes');
 
+//API Buffers
+var ProtoOAPayloadType = openApiBuilder.build('ProtoOAPayloadType');
 var OAuthBuf = openApiBuilder.build('ProtoOAAuthReq');
 var SpotsBuf = openApiBuilder.build('ProtoOASubscribeForSpotsReq');
 var SpotBuf = openApiBuilder.build('ProtoOASpotEvent');
@@ -38,6 +39,7 @@ var SpotBuf = openApiBuilder.build('ProtoOASpotEvent');
 
 var pingInterval;
 var start = Math.floor(new Date() / 1000);
+var prevBidPrice, prevAskPrice;
 
 var socket = tls.connect(API_PORT, API_HOST, function() {
     console.log('Connected');
@@ -70,19 +72,15 @@ socket.on('readable', function() {
 
     data = ProtoMessageBuf.decode(data);
     var payloadType = data.payloadType;
-    var requestName = payloadmap.getPayloadName(payloadType);
-    logTraffic && console.log( requestName );
-    logData && console.log('payload:',data);
 
-    //Payload Types on payloadmap.js
     switch( payloadType ) {
-        case 50:
+        case ProtoPayloadType.ERROR_RES:
             var msg = ErrorBuf.decode(data.payload);
             console.log(chalk.red('Received error response'));
             console.log(chalk.red(msg.description));
 
-            break;        
-        case 2001:
+            break;
+        case ProtoOAPayloadType.OA_AUTH_RES:
             var spotsBuf = new SpotsBuf({
                 payloadType: 'OA_SUBSCRIBE_FOR_SPOTS_REQ',
                 accountId: ACCOUNT_ID,
@@ -95,13 +93,16 @@ socket.on('readable', function() {
             socket.write(msg);
 
             break;
-        case 2029:        
+        case ProtoOAPayloadType.OA_SPOT_EVENT:
             var msg = SpotBuf.decode(data.payload);
-            console.log(chalk.blue('Bid price: ' + msg.bidPrice + ', ask price: ' + msg.askPrice));
+            console.log('Bid price: ' + formatPrice(msg.bidPrice, prevBidPrice) + ', ask price: ' + formatPrice(msg.askPrice, prevAskPrice));
+            prevBidPrice = msg.bidPrice;
+            prevAskPrice = msg.askPrice;
 
             break;
         default:
-            console.log('Received misc payloadType: ' + payloadType);
+            //if passed parameter logAllTraffic, the app will log even PING requests.
+            logAllTraffic && console.log('Received misc payloadType: ' + payloadType);
             break;
     }
 
@@ -117,6 +118,16 @@ socket.on('end', function() {
 socket.on('error', function(e) {
     console.log(chalk.red(e));
 });
+
+/***
+ * Returns colored price according its previous value. Green if the price was less or equal, otherwise red.
+ * @param price
+ * @param prevPrice
+ * @returns {*}
+ */
+function formatPrice(price, prevPrice) {
+    return (prevPrice <= price) ?  chalk.green(price) : chalk.red(price);
+}
 
 function wrapMessage(data) {
     var protoMessageBuf = new ProtoMessageBuf({
