@@ -9,6 +9,6 @@
     "protobufjs": "^4.0.0",
     "byte": "^1.1.4",
     "chalk": "^1.1.1",
-    "node-protobuf-stream":"spotware/node-protobuf-stream"
+    "node-protobuf-stream":"https://github.com/spotware/node-protobuf-stream"
   }
 }
