@@ -9,7 +9,6 @@ Samples of using [Connect Open API](https://connect.spotware.com/documentation/s
 * In the application folder run the commands:
 ```shell
     npm install
-    node app.js
+    npm start
 ```
 * The application will connect to sandbox Open API server, authenticate and subscribe for EURUSD spot prices
-
