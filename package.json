@@ -1,14 +1,17 @@
 {
   "name": "connect-nodejs-samples",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Samples of using Spotware Connect Open API in JavaScript and Node.js",
   "keywords": ["spotware", "connect", "ctratder"],
   "author": "Spotware Services <connect@spotware.com>",
   "private": true,
+  "scripts": {
+      "start": "node start"
+  },
   "dependencies": {
-    "protobufjs": "^4.0.0",
-    "byte": "^1.1.4",
-    "chalk": "^1.1.1",
+    "protobufjs": "4.0.0",
+    "byte": "1.1.4",
+    "chalk": "1.1.1",
     "protobuf-stream":"spotware/node-protobuf-stream"
   }
 }
