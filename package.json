@@ -5,6 +5,9 @@
   "keywords": ["spotware", "connect", "ctratder"],
   "author": "Spotware Services <connect@spotware.com>",
   "private": true,
+  "scripts": {
+      "start": "node app"
+  },
   "dependencies": {
     "protobufjs": "^4.0.0",
     "byte": "^1.1.4",
