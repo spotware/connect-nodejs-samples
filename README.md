@@ -12,3 +12,8 @@ Samples of using [Connect Open API](https://connect.spotware.com/documentation/s
     npm start
 ```
 * The application will connect to sandbox Open API server, authenticate and subscribe for EURUSD spot prices
+
+## Tests:
+```shell
+    npm test
+```
