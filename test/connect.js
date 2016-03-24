@@ -80,17 +80,16 @@ describe('Connect', function () {
         subscribeForSpots.call(connect, 'EURUSD').then(done);
     });
 
-    //it('onError', function () {
-    //    var socket = connect.socket;
-    //    socket.on('error', function () {
-    //        expect(connect.state).toBe(state.disconnected);
-    //    });
-    //    socket.write(new Buffer(0));
-    //});
+    it('onError', function () {
+        var socket = connect.socket;
+        socket.on('error', function () {
+            expect(connect.state).toBe(state.disconnected);
+        });
+        socket.write(new Buffer(0));
+    });
 
-    //it('start', function () {
-    //    connect.start();
-    //    expect(connect.socket instanceof tls.TLSSocket).toBeTruthy();
-    //});
+    it('socket instanceof tls.TLSSocket', function () {
+        expect(connect.socket instanceof tls.TLSSocket).toBeTruthy();
+    });
 
 });
