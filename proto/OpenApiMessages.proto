@@ -3,7 +3,6 @@ option java_generate_equals_and_hash = true;
 option java_package = "com.xtrader.protocol.proto.openapi";
 option java_outer_classname = "ContainerOpenApiMessages";
 
-import "OpenApiModelMessages.proto";
 import "CommonModelMessages.proto";
 import "OpenApiModelMessages.proto";
 

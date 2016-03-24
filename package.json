@@ -10,13 +10,14 @@
   "author": "Spotware Services <connect@spotware.com>",
   "private": true,
   "scripts": {
-    "start": "node start",
+    "start": "node lib/start",
     "test": "istanbul cover --include-all-sources jasmine JASMINE_CONFIG_PATH=test/support/jasmine.json"
   },
   "dependencies": {
-    "protobufjs": "4.0.0",
     "chalk": "1.1.1",
-    "protobuf-stream": "spotware/node-protobuf-stream"
+    "hat": "0.0.3",
+    "protobuf-stream": "spotware/node-protobuf-stream",
+    "protobufjs": "5.0.1"
   },
   "devDependencies": {
     "istanbul": "0.4.2",
