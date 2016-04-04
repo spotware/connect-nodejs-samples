@@ -1,6 +1,6 @@
 {
   "name": "connect-nodejs-samples",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "Samples of using Spotware Connect Open API in JavaScript and Node.js",
   "keywords": [
     "spotware",
@@ -10,17 +10,9 @@
   "author": "Spotware Services <connect@spotware.com>",
   "private": true,
   "scripts": {
-    "start": "node lib/start",
-    "test": "istanbul cover --include-all-sources jasmine JASMINE_CONFIG_PATH=test/support/jasmine.json"
+    "start": "node lib/connect-nodejs-samples"
   },
   "dependencies": {
-    "chalk": "1.1.1",
-    "hat": "0.0.3",
-    "protobuf-stream": "spotware/node-protobuf-stream",
-    "protobufjs": "5.0.1"
-  },
-  "devDependencies": {
-    "istanbul": "0.4.2",
-    "jasmine": "2.4.1"
+    "connect-js-api": "spotware/connect-js-api"
   }
 }
