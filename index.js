@@ -5,9 +5,9 @@ var AdapterTLS = connectJsApi.AdapterTLS;
 var Stream = connectJsApi.Stream;
 var ProtoMessages = connectJsApi.ProtoMessages;
 var Connect = connectJsApi.Connect;
-var ping = require('./ping');
-var auth = require('./auth');
-var subscribeForSpots = require('./subscribe_for_spots');
+var ping = require('./lib/ping');
+var auth = require('./lib/auth');
+var subscribeForSpots = require('./lib/subscribe_for_spots');
 var startTime;
 var protocol = new ProtoMessages([
     {

@@ -10,7 +10,7 @@
   "author": "Spotware Services <connect@spotware.com>",
   "private": true,
   "scripts": {
-    "start": "node lib/connect-nodejs-samples"
+    "start": "node index"
   },
   "dependencies": {
     "connect-js-api": "spotware/connect-js-api"
