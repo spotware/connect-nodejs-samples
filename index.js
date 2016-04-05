@@ -2,7 +2,7 @@
 
 var connectJsApi = require('connect-js-api');
 var AdapterTLS = connectJsApi.AdapterTLS;
-var Stream = connectJsApi.Stream;
+var EncodeDecode = connectJsApi.EncodeDecode;
 var ProtoMessages = connectJsApi.ProtoMessages;
 var Connect = connectJsApi.Connect;
 var ping = require('./lib/ping');
@@ -23,11 +23,11 @@ var adapter = new AdapterTLS({
     host: 'sandbox-tradeapi.spotware.com',
     port: 5032
 });
-var stream = new Stream();
+var encodeDecode = new EncodeDecode();
 var connect = new Connect({
     adapter: adapter,
-    protocol: protocol,
-    stream: stream
+    encodeDecode: encodeDecode,
+    protocol: protocol
 });
 
 ping = ping.bind(connect);
