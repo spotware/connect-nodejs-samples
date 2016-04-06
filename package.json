@@ -13,6 +13,7 @@
     "start": "node index"
   },
   "dependencies": {
-    "connect-js-api": "spotware/connect-js-api"
+    "connect-js-api": "spotware/connect-js-api#2.1.0",
+    "connect-protobuf-messages": "spotware/connect-protobuf-messages"
   }
 }

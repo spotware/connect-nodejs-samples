@@ -1,9 +1,9 @@
 'use strict';
 
+var ProtoMessages = require('connect-protobuf-messages');
 var connectJsApi = require('connect-js-api');
 var AdapterTLS = connectJsApi.AdapterTLS;
 var EncodeDecode = connectJsApi.EncodeDecode;
-var ProtoMessages = connectJsApi.ProtoMessages;
 var Connect = connectJsApi.Connect;
 var ping = require('./lib/ping');
 var auth = require('./lib/auth');
@@ -11,11 +11,11 @@ var subscribeForSpots = require('./lib/subscribe_for_spots');
 var startTime;
 var protocol = new ProtoMessages([
     {
-        file: 'proto/CommonMessages.proto',
+        file: 'node_modules/connect-protobuf-messages/src/main/protobuf/CommonMessages.proto',
         protoPayloadType: 'ProtoPayloadType'
     },
     {
-        file: 'proto/OpenApiMessages.proto',
+        file: 'node_modules/connect-protobuf-messages/src/main/protobuf/OpenApiMessages.proto',
         protoPayloadType: 'ProtoOAPayloadType'
     }
 ]);
