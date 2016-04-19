@@ -13,7 +13,9 @@
     "start": "node index"
   },
   "dependencies": {
+    "connect-js-adapter-tls": "spotware/connect-js-adapter-tls",
     "connect-js-api": "spotware/connect-js-api#2.1.0",
+    "connect-js-encode-decode": "spotware/connect-js-encode-decode",
     "connect-protobuf-messages": "spotware/connect-protobuf-messages"
   }
 }
