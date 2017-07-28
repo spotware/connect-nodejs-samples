@@ -16,6 +16,6 @@
     "connect-js-adapter-tls": "spotware/connect-js-adapter-tls#v1.0.0",
     "connect-js-api": "spotware/connect-js-api#v2.5.1",
     "connect-js-encode-decode": "spotware/connect-js-encode-decode",
-    "connect-protobuf-messages": "spotware/connect-protobuf-messages"
+    "connect-protobuf-messages": "spotware/connect-protobuf-messages#v2.0.0"
   }
 }
